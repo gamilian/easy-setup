@@ -20,14 +20,14 @@ One-script terminal environment setup for **macOS**, **Debian/Ubuntu**, and **Wi
 ### macOS
 
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
 ### Debian / Ubuntu
 
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
@@ -41,7 +41,7 @@ wsl --install
 
 Then inside WSL:
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
@@ -51,12 +51,6 @@ cd terminal-setup && ./setup.sh
 ./setup.sh --fish       # Fish shell
 ./setup.sh --zsh        # Zsh + fish-like plugins
 ./setup.sh --dry-run    # Preview what would be done (no changes)
-```
-
-One-liner (auto-clones):
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/main/setup.sh)
 ```
 
 ## Choose Your Shell
@@ -114,7 +108,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 - CLI tools install via apt where available, GitHub releases for others (delta, lazygit, eza)
 - `bat` → `batcat`, `fd` → `fdfind` — symlinks are created automatically
 - Fonts install to `~/.local/share/fonts/`
-- Ghostty is not in apt — install manually via [snap, build from source](https://ghostty.org/docs/install), or use another terminal
+- Ghostty is not in apt — [install manually](https://ghostty.org/docs/install) (build from source or official packages), or use another terminal
 - Zsh plugins install via apt or git clone
 
 ### Windows (WSL)

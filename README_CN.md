@@ -12,23 +12,23 @@
 | 🍎 **macOS** | ✅ 主力平台 — 长期使用验证 | Homebrew |
 | 🐧 **Debian / Ubuntu** | 🧪 实验性 — 可用但未经长期测试 | apt + 内置二进制 |
 | 🪟 **Windows (WSL)** | 🧪 实验性 — 可用但未经长期测试 | apt（WSL 内部） |
+| 🪟 **Windows (原生)** | ⛔ 不支持 | 请先安装 WSL |
 
 > **注意：** 本脚本主要在 macOS 上开发和测试。Linux（Debian/Ubuntu）和 WSL 支持已添加且可用，但尚未经过长期使用测试。欢迎提 Issue 和 PR！
-| 🪟 **Windows (原生)** | ⛔ 不支持 | 请先安装 WSL |
 
 ## 快速开始
 
 ### macOS
 
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
 ### Debian / Ubuntu
 
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
@@ -42,7 +42,7 @@ wsl --install
 
 然后在 WSL 中：
 ```bash
-git clone https://github.com/lewislulu/terminal-setup.git
+git clone https://github.com/gamilian/terminal-setup.git
 cd terminal-setup && ./setup.sh
 ```
 
@@ -52,12 +52,6 @@ cd terminal-setup && ./setup.sh
 ./setup.sh --fish       # Fish shell
 ./setup.sh --zsh        # Zsh + 类 Fish 插件
 ./setup.sh --dry-run    # 预览会做什么（不做任何改动）
-```
-
-一行命令（自动 clone）：
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/main/setup.sh)
 ```
 
 ## 选择你的 Shell
@@ -115,7 +109,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lewislulu/terminal-setup/mai
 - CLI 工具优先用 apt 安装，apt 没有的从 GitHub releases 下载（delta、lazygit、eza）
 - `bat` 在 Debian 上叫 `batcat`，`fd` 叫 `fdfind` — 脚本会自动创建软链接
 - 字体安装到 `~/.local/share/fonts/`
-- Ghostty 不在 apt 里 — 可通过 [snap、源码编译](https://ghostty.org/docs/install) 安装，或用其他终端
+- Ghostty 不在 apt 里 — 需[手动安装](https://ghostty.org/docs/install)（源码编译或官方包），或用其他终端
 - Zsh 插件通过 apt 或 git clone 安装
 
 ### Windows (WSL)
