@@ -95,7 +95,11 @@ case "$OS" in
         info "Detected ${BOLD}macOS${NC}"
         ;;
     debian)
-        info "Detected ${BOLD}Debian/Ubuntu Linux${NC}"
+        if grep -qi ubuntu /etc/os-release 2>/dev/null; then
+            info "Detected ${BOLD}Ubuntu Linux${NC}"
+        else
+            info "Detected ${BOLD}Debian Linux${NC}"
+        fi
         ;;
     wsl)
         info "Detected ${BOLD}Windows WSL${NC} (Debian/Ubuntu layer)"
@@ -137,7 +141,7 @@ CONFIGS_DIR="$SCRIPT_DIR/configs"
 if [[ ! -d "$CONFIGS_DIR" ]]; then
     info "Config files not found locally, cloning repo..."
     TMPDIR_CLONE="$(mktemp -d)"
-    git clone --depth 1 https://github.com/lewislulu/terminal-setup.git "$TMPDIR_CLONE/terminal-setup"
+    git clone --depth 1 https://github.com/gamilian/terminal-setup.git "$TMPDIR_CLONE/terminal-setup"
     SCRIPT_DIR="$TMPDIR_CLONE/terminal-setup"
     CONFIGS_DIR="$SCRIPT_DIR/configs"
 fi
@@ -612,9 +616,7 @@ echo -e "${BOLD}═════════════════════�
 echo -e "${BOLD}  🚀 Step 6/9: Starship Prompt${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
-if has_cmd starship; then
-    success "Starship already installed"
-else
+install_starship() {
     case "$OS" in
         macos)
             info "Installing Starship..."
@@ -650,6 +652,12 @@ else
             ;;
     esac
     success "Starship installed"
+}
+
+if has_cmd starship; then
+    success "Starship already installed"
+else
+    install_starship
 fi
 
 # ─── Step 7: fnm + Node.js (optional) ───────────────────────────────
@@ -679,9 +687,9 @@ else
     echo -e "  ${YELLOW}  (e.g. Claude Code, Codex CLI, pnpm global packages).${NC}"
     echo -e "  ${YELLOW}  Only install fnm if you need to manage multiple Node versions.${NC}"
     echo ""
-    printf "  Install fnm + Node.js? (y/N, default: N): "
+    printf "  Install fnm + Node.js? (y/n) [default: no]: "
     read -r INSTALL_FNM
-    if [[ "$INSTALL_FNM" =~ ^[Yy]$ ]]; then
+    if [[ "$INSTALL_FNM" =~ ^[Yy] ]]; then
         case "$OS" in
             macos)
                 info "Installing fnm (Fast Node Manager)..."
@@ -715,48 +723,52 @@ echo -e "${BOLD}═════════════════════�
 echo -e "${BOLD}  🪟 Step 8/9: Zellij (optional)${NC}"
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
 
+install_zellij() {
+    case "$OS" in
+        macos)
+            info "Installing Zellij..."
+            run_cmd brew install zellij
+            ;;
+        debian|wsl)
+            info "Installing Zellij..."
+            if [[ -f "$SCRIPT_DIR/bin/linux-x86_64/zellij" ]]; then
+                run_cmd sudo cp "$SCRIPT_DIR/bin/linux-x86_64/zellij" /usr/local/bin/zellij
+                run_cmd sudo chmod +x /usr/local/bin/zellij
+            else
+                # Download binary from GitHub releases (zellij.dev/launch auto-starts zellij, which hangs the script)
+                info "Downloading Zellij from GitHub releases..."
+                local zellij_arch
+                case "$(uname -m)" in
+                    x86_64)  zellij_arch="x86_64" ;;
+                    aarch64) zellij_arch="aarch64" ;;
+                    *) warn "Unsupported arch for Zellij: $(uname -m)"; return 0 ;;
+                esac
+                local zellij_url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-${zellij_arch}-unknown-linux-musl.tar.gz"
+                local zellij_tmp
+                zellij_tmp="$(mktemp -d)"
+                if $DRY_RUN; then
+                    echo -e "${YELLOW}[DRY-RUN]${NC} curl -fsSL $zellij_url | tar xz -C $zellij_tmp && sudo cp $zellij_tmp/zellij /usr/local/bin/"
+                else
+                    curl -fsSL "$zellij_url" | tar xz -C "$zellij_tmp" \
+                        && sudo cp "$zellij_tmp/zellij" /usr/local/bin/zellij \
+                        && sudo chmod +x /usr/local/bin/zellij
+                    rm -rf "$zellij_tmp"
+                fi
+            fi
+            ;;
+    esac
+    success "Zellij installed"
+}
+
 if has_cmd zellij; then
     success "Zellij already installed"
 else
     echo ""
     echo -e "  Zellij is a modern terminal multiplexer (like tmux, but better UX)."
-    printf "  Install Zellij? (y/N): "
+    printf "  Install Zellij? (y/n) [default: no]: "
     read -r INSTALL_ZELLIJ
-    if [[ "$INSTALL_ZELLIJ" =~ ^[Yy]$ ]]; then
-        case "$OS" in
-            macos)
-                info "Installing Zellij..."
-                run_cmd brew install zellij
-                ;;
-            debian|wsl)
-                info "Installing Zellij..."
-                if [[ -f "$SCRIPT_DIR/bin/linux-x86_64/zellij" ]]; then
-                    run_cmd sudo cp "$SCRIPT_DIR/bin/linux-x86_64/zellij" /usr/local/bin/zellij
-                    run_cmd sudo chmod +x /usr/local/bin/zellij
-                else
-                    # Download binary from GitHub releases (zellij.dev/launch auto-starts zellij, which hangs the script)
-                    info "Downloading Zellij from GitHub releases..."
-                    local zellij_arch
-                    case "$(uname -m)" in
-                        x86_64)  zellij_arch="x86_64" ;;
-                        aarch64) zellij_arch="aarch64" ;;
-                        *) warn "Unsupported arch for Zellij: $(uname -m)"; return 0 ;;
-                    esac
-                    local zellij_url="https://github.com/zellij-org/zellij/releases/latest/download/zellij-${zellij_arch}-unknown-linux-musl.tar.gz"
-                    local zellij_tmp
-                    zellij_tmp="$(mktemp -d)"
-                    if $DRY_RUN; then
-                        echo -e "${YELLOW}[DRY-RUN]${NC} curl -fsSL $zellij_url | tar xz -C $zellij_tmp && sudo cp $zellij_tmp/zellij /usr/local/bin/"
-                    else
-                        curl -fsSL "$zellij_url" | tar xz -C "$zellij_tmp" \
-                            && sudo cp "$zellij_tmp/zellij" /usr/local/bin/zellij \
-                            && sudo chmod +x /usr/local/bin/zellij
-                        rm -rf "$zellij_tmp"
-                    fi
-                fi
-                ;;
-        esac
-        success "Zellij installed"
+    if [[ "$INSTALL_ZELLIJ" =~ ^[Yy] ]]; then
+        install_zellij
     else
         info "Skipping Zellij"
     fi
