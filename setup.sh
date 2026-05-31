@@ -845,10 +845,14 @@ if [[ "$SHELL_CHOICE" == "fish" ]]; then
     run_cmd cp "$OS_CONFIG_DIR/config.fish" "$FISH_CONFIG_DIR/config.fish"
     success "Fish config deployed"
 else
-    if [[ -f "$HOME/.zshrc" ]]; then
-        run_cmd cp "$HOME/.zshrc" "$HOME/.zshrc.bak.$(date +%s)"
-        warn "Backed up existing .zshrc"
-    fi
+    local ts
+    ts="$(date +%s)"
+    for zfile in .zshrc .zshenv .zprofile .zlogin .zlogout; do
+        if [[ -f "$HOME/$zfile" ]]; then
+            run_cmd cp "$HOME/$zfile" "$HOME/${zfile}.bak.${ts}"
+            warn "Backed up existing $zfile"
+        fi
+    done
     run_cmd cp "$OS_CONFIG_DIR/.zshrc" "$HOME/.zshrc"
     success "Zsh config deployed"
 fi

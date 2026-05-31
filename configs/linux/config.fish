@@ -53,6 +53,25 @@ if status is-interactive
     abbr -a cd "z"
 end
 
+# Proxy
+function proxy
+    set -l port (test (count $argv) -gt 0; and echo $argv[1]; or echo 7897)
+    set -gx http_proxy "http://127.0.0.1:$port"
+    set -gx https_proxy "http://127.0.0.1:$port"
+    set -gx all_proxy "socks5://127.0.0.1:$port"
+    set -gx HTTP_PROXY "$http_proxy"
+    set -gx HTTPS_PROXY "$https_proxy"
+    set -gx ALL_PROXY "$all_proxy"
+    set -gx no_proxy "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    set -gx NO_PROXY "$no_proxy"
+    echo "Proxy on → 127.0.0.1:$port"
+end
+
+function unproxy
+    set -e http_proxy https_proxy all_proxy no_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY NO_PROXY
+    echo "Proxy off"
+end
+
 # zoxide
 zoxide init fish | source
 

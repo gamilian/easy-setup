@@ -32,7 +32,7 @@ if [[ -n "$BREW_PREFIX" && -d "$BREW_PREFIX/share/zsh-completions" ]]; then
 elif [[ -d /usr/share/zsh-completions ]]; then
     fpath=(/usr/share/zsh-completions $fpath)
 fi
-autoload -Uz compinit && compinit
+autoload -Uz compinit && compinit -i
 
 # Substring + case-insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=*'
@@ -112,6 +112,25 @@ case ":$PATH:" in
     *":$PNPM_HOME:"*) ;;
     *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+
+# ─── Proxy ───────────────────────────────────────────────────────────
+function proxy() {
+    local port="${1:-7897}"
+    export http_proxy="http://127.0.0.1:$port"
+    export https_proxy="http://127.0.0.1:$port"
+    export all_proxy="socks5://127.0.0.1:$port"
+    export HTTP_PROXY="$http_proxy"
+    export HTTPS_PROXY="$https_proxy"
+    export ALL_PROXY="$all_proxy"
+    export no_proxy="localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    export NO_PROXY="$no_proxy"
+    echo "Proxy on → 127.0.0.1:$port"
+}
+
+function unproxy() {
+    unset http_proxy https_proxy all_proxy no_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY NO_PROXY
+    echo "Proxy off"
+}
 
 # ─── zsh-syntax-highlighting ──────────────────────────────────────────
 # Load this at the very end of .zshrc so widgets created by compinit,
