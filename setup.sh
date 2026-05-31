@@ -845,7 +845,6 @@ if [[ "$SHELL_CHOICE" == "fish" ]]; then
     run_cmd cp "$OS_CONFIG_DIR/config.fish" "$FISH_CONFIG_DIR/config.fish"
     success "Fish config deployed"
 else
-    local ts
     ts="$(date +%s)"
     for zfile in .zshrc .zshenv .zprofile .zlogin .zlogout; do
         if [[ -f "$HOME/$zfile" ]]; then
