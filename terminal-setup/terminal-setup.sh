@@ -195,6 +195,50 @@ has_cmd() {
     command -v "$1" &>/dev/null
 }
 
+is_ubuntu() {
+    [[ -f /etc/os-release ]] && grep -qi '^ID=ubuntu' /etc/os-release
+}
+
+enable_ubuntu_universe() {
+    if [[ "$OS" != "debian" && "$OS" != "wsl" ]]; then
+        return 1
+    fi
+    if ! is_ubuntu; then
+        return 1
+    fi
+
+    info "Ensuring Ubuntu universe repository is enabled..."
+    if has_cmd apt-add-repository; then
+        run_cmd sudo apt-add-repository -y universe
+        run_cmd sudo apt-get update
+        return 0
+    fi
+
+    info "Installing software-properties-common for apt-add-repository..."
+    run_cmd sudo apt-get install -y software-properties-common
+    run_cmd sudo apt-add-repository -y universe
+    run_cmd sudo apt-get update
+}
+
+apt_install_or_retry_with_universe() {
+    local pkg="$1"
+    if run_cmd sudo apt-get install -y "$pkg" 2>/dev/null; then
+        return 0
+    fi
+
+    warn "$pkg was not available from the current apt sources."
+    if enable_ubuntu_universe; then
+        info "Retrying $pkg after enabling Ubuntu universe..."
+        if run_cmd sudo apt-get install -y "$pkg" 2>/dev/null; then
+            return 0
+        fi
+    fi
+
+    warn "$pkg still could not be installed via apt. Your mirror may be incomplete/stale, or Ubuntu universe may be disabled."
+    warn "Try switching to a fully synced Ubuntu/Debian mirror, then run: sudo apt-get update"
+    return 1
+}
+
 # ─── Step 1: Package Manager ────────────────────────────────────────
 echo ""
 echo -e "${BOLD}══════════════════════════════════════════${NC}"
@@ -220,6 +264,7 @@ case "$OS" in
     debian|wsl)
         info "Updating apt package index..."
         run_cmd sudo apt-get update
+        enable_ubuntu_universe || true
         # Ensure basic build tools are available
         pkg_install "curl"
         pkg_install "git"
@@ -503,10 +548,10 @@ install_cli_tools_linux() {
         success "btop already installed"
     else
         info "Installing btop..."
-        if run_cmd sudo apt-get install -y btop 2>/dev/null; then
+        if apt_install_or_retry_with_universe "btop"; then
             success "btop installed via apt"
         else
-            warn "btop not available via apt — skipping (install manually: https://github.com/aristocratos/btop)"
+            warn "btop not available via apt after retry — skipping (install manually: https://github.com/aristocratos/btop)"
         fi
     fi
 
@@ -515,10 +560,10 @@ install_cli_tools_linux() {
         success "zoxide already installed"
     else
         info "Installing zoxide..."
-        if run_cmd sudo apt-get install -y zoxide 2>/dev/null; then
+        if apt_install_or_retry_with_universe "zoxide"; then
             success "zoxide installed via apt"
         else
-            info "zoxide not in apt, using bundled installer..."
+            info "zoxide not available via apt after retry, using bundled installer..."
             run_cmd bash "$SCRIPT_DIR/scripts/install-zoxide.sh"
             success "zoxide installed via bundled script"
         fi
@@ -919,4 +964,12 @@ echo -e "    1. Restart your terminal (or open ${BOLD}Ghostty${NC})"
 echo -e "    2. Node is ready: ${BOLD}node --version${NC}"
 echo -e "    3. Pin a project: ${BOLD}echo 22 > .node-version${NC} (fnm auto-switches)"
 echo -e "    4. Try: ${BOLD}Ctrl+R${NC} (fzf history) / ${BOLD}Ctrl+T${NC} (fzf files)"
+echo ""
+echo -e "  ${YELLOW}Terminal font / icon setup:${NC}"
+echo -e "    Set your terminal font to ${BOLD}MesloLGS NF${NC} to avoid broken icons or garbled glyphs."
+echo -e "    • VS Code / Cursor: set ${BOLD}terminal.integrated.fontFamily${NC} to ${BOLD}MesloLGS NF${NC}"
+echo -e "    • iTerm2: Profiles → Text → Font → ${BOLD}MesloLGS NF${NC}"
+echo -e "    • Ghostty: set ${BOLD}font-family = MesloLGS NF${NC}"
+echo -e "    • Windows Terminal: Profile → Appearance → Font face → ${BOLD}MesloLGS NF${NC}"
+echo -e "    Restart the app after changing the font if icons still look wrong."
 echo ""

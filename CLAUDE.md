@@ -69,7 +69,7 @@ If `configs/` isn't found next to `terminal-setup/terminal-setup.sh` (i.e. it wa
 - **`zsh-syntax-highlighting` must be sourced last** in both `configs/macos/.zshrc` and `configs/linux/.zshrc`. It wraps ZLE widgets, so it has to load after `compinit`, `zle -N`, and autosuggestions. This ordering was the subject of recent bugfix PRs — do not move that block up the file.
 - **`configs/macos/` and `configs/linux/` are parallel variants.** A change to a shared section (aliases, history, fzf, abbreviations) must be applied to both files — there is no shared base. Linux-only differences: `/usr/share/...` plugin paths, `~/.local/bin` + `~/.local/share/fnm` in PATH, `~/.local/share/pnpm` for pnpm.
 - The clone URL (`github.com/gamilian/easy-setup.git`) appears in the root selector, the terminal module curl-pipe bootstrap, and the READMEs; keep them consistent if the repo moves.
-- **README.md (English) and README_CN.md (Chinese) are parallel** — user-facing changes (new tool, new flag, alias table) should land in both.
+- **README.md (English) and README.zh-CN.md (Chinese) are parallel** — user-facing changes (new tool, new flag, alias table) should land in both.
 
 ## Non-installer files
 
