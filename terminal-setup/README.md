@@ -19,12 +19,28 @@ One-script terminal environment setup for **macOS**, **Debian/Ubuntu**, and **Wi
 
 ### macOS
 
+One-command install:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+Manual download and run:
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup && ./setup.sh terminal
 ```
 
 ### Debian / Ubuntu
+
+One-command install:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+Manual download and run:
 
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
@@ -40,6 +56,15 @@ wsl --install
 ```
 
 Then inside WSL:
+
+One-command install:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+Manual download and run:
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup && ./setup.sh terminal
@@ -51,6 +76,9 @@ cd easy-setup && ./setup.sh terminal
 ./setup.sh terminal --fish       # Fish shell
 ./setup.sh terminal --zsh        # Zsh + fish-like plugins
 ./setup.sh terminal --dry-run    # Preview what would be done (no changes)
+./install.sh terminal --zsh      # Local one-click bootstrap
+./install.sh terminal --fish --dry-run  # Local one-click preview
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --zsh
 ./terminal-setup/terminal-setup.sh --zsh  # Run this module directly
 ```
 

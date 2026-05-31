@@ -6,6 +6,7 @@
 #   ./setup.sh                 # interactive module choice
 #   ./setup.sh terminal        # run terminal-setup/terminal-setup.sh
 #   ./setup.sh terminal --zsh  # pass args through to terminal-setup/terminal-setup.sh
+#   ./install.sh terminal --zsh  # one-click bootstrap with the terminal module
 
 set -euo pipefail
 
@@ -20,6 +21,9 @@ Modules:
   terminal    Terminal environment setup (Ghostty + Fish/Zsh + Starship)
 
 Examples:
+  ./install.sh
+  ./install.sh terminal --zsh
+  ./install.sh terminal --fish --dry-run
   ./setup.sh terminal
   ./setup.sh terminal --zsh
   ./setup.sh terminal --fish --dry-run

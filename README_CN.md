@@ -8,6 +8,21 @@
 
 ## 快速开始
 
+一键运行：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+选择 Shell 或预览改动：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --zsh
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --fish --dry-run
+```
+
+手动下载后运行：
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup
@@ -19,6 +34,8 @@ cd easy-setup
 ```bash
 ./setup.sh terminal --zsh
 ./setup.sh terminal --fish --dry-run
+./install.sh terminal --zsh
+./install.sh terminal --fish --dry-run
 ```
 
 完整终端配置说明见 [terminal-setup/README_CN.md](terminal-setup/README_CN.md)。

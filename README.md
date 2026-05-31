@@ -8,6 +8,21 @@ Personal setup scripts for development environments.
 
 ## Quick Start
 
+One-command install:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+Choose a shell or preview changes:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --zsh
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --fish --dry-run
+```
+
+Manual download and run:
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup
@@ -19,6 +34,8 @@ Pass terminal setup options after the module name:
 ```bash
 ./setup.sh terminal --zsh
 ./setup.sh terminal --fish --dry-run
+./install.sh terminal --zsh
+./install.sh terminal --fish --dry-run
 ```
 
 For full terminal setup details, see [terminal-setup/README.md](terminal-setup/README.md).

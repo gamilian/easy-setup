@@ -20,12 +20,28 @@
 
 ### macOS
 
+一键运行：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+手动下载后运行：
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup && ./setup.sh terminal
 ```
 
 ### Debian / Ubuntu
+
+一键运行：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+手动下载后运行：
 
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
@@ -41,6 +57,15 @@ wsl --install
 ```
 
 然后在 WSL 中：
+
+一键运行：
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal
+```
+
+手动下载后运行：
+
 ```bash
 git clone https://github.com/gamilian/easy-setup.git
 cd easy-setup && ./setup.sh terminal
@@ -52,6 +77,9 @@ cd easy-setup && ./setup.sh terminal
 ./setup.sh terminal --fish       # Fish shell
 ./setup.sh terminal --zsh        # Zsh + 类 Fish 插件
 ./setup.sh terminal --dry-run    # 预览会做什么（不做任何改动）
+./install.sh terminal --zsh      # 本地一键入口
+./install.sh terminal --fish --dry-run  # 本地一键预览
+bash <(curl -fsSL https://raw.githubusercontent.com/gamilian/easy-setup/main/install.sh) terminal --zsh
 ./terminal-setup/terminal-setup.sh --zsh  # 直接运行该模块
 ```
 
