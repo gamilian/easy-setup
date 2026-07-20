@@ -11,6 +11,12 @@ export PATH="$HOME/.local/bin:$PATH"
 # ─── Starship prompt ────────────────────────────────────────────────
 eval "$(starship init zsh)"
 
+# Ghostty's TERM is not installed on every remote host. Without matching
+# terminfo, zle cursor movement can misplace inline autosuggestions.
+if [[ "$TERM" == "xterm-ghostty" ]] && ! infocmp "$TERM" >/dev/null 2>&1; then
+    export TERM=xterm-256color
+fi
+
 # ─── Zsh plugins (apt / git clone → /usr/share) ─────────────────────
 # Autosuggestions (fish-like suggestions)
 if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
